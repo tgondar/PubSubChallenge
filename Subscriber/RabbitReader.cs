@@ -1,6 +1,8 @@
-﻿using RabbitMQ.Client;
+﻿using Common.Entities;
+using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
+using System.Text.Json;
 
 namespace Subscriber
 {
@@ -37,7 +39,8 @@ namespace Subscriber
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
-                Console.WriteLine(" [x] Received {0}", message);
+                ProductRequest product = JsonSerializer.Deserialize<ProductRequest>(message);
+                Console.WriteLine(" [x] Received: {0}, {1}", product.Id, product.Name);
             };
 
             _channel.BasicConsume(queue: "productQueue", autoAck: true, consumer: consumer);

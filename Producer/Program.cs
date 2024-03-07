@@ -1,3 +1,4 @@
+using Common.Entities;
 using RabbitMQ.Client;
 using System.Text;
 using System.Text.Json;
@@ -51,4 +52,3 @@ app.MapPost("/product", (ProductRequest payload) =>
 
 app.Run();
 
-public record ProductRequest(Guid Id, string Name);
