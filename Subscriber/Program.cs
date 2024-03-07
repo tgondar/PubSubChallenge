@@ -1,11 +1,13 @@
-﻿using Subscriber;
-
-Console.WriteLine("Hello, World!");
-
-var rabbitReader = new RabbitReader();
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Subscriber;
 
 Console.WriteLine("Rabbit reader: ");
 
-rabbitReader.Read();
+var builder = Host.CreateApplicationBuilder();
+builder.Services.AddHostedService<Worker>();
+
+var host = builder.Build();
+host.Run();
 
 Console.ReadLine();

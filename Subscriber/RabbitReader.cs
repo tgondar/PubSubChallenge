@@ -20,7 +20,7 @@ namespace Subscriber
         {
             var factory = new ConnectionFactory()
             {
-                HostName = "localhost",
+                HostName = "host.docker.internal",
                 Port = 5672,
                 UserName = "user",
                 Password = "password",
@@ -40,7 +40,7 @@ namespace Subscriber
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
                 ProductRequest product = JsonSerializer.Deserialize<ProductRequest>(message);
-                Console.WriteLine(" [x] Received: {0}, {1}", product.Id, product.Name);
+                Console.WriteLine(" [x] Received: {0}, {1}", product?.Id, product?.Name);
             };
 
             _channel.BasicConsume(queue: "productQueue", autoAck: true, consumer: consumer);
