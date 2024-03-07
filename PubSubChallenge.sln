@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Producer", "Producer\Produc
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{12B66E4D-6967-4C41-9C62-1B371ABDAC84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Subscriber", "..\Subscriber\Subscriber.csproj", "{74047184-DAB1-444C-8A22-8BA319AC014C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Subscriber", "Subscriber\Subscriber.csproj", "{74047184-DAB1-444C-8A22-8BA319AC014C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
