@@ -4,13 +4,18 @@ namespace Subscriber
 {
     public class Worker : BackgroundService
     {
-        readonly RabbitReader _rabbitReader = new();
+        private readonly IMessageRepository _messageRepository;
+
+        public Worker(IMessageRepository messageRepository)
+        {
+            _messageRepository = messageRepository;
+        }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
 
-            _rabbitReader.Read();
+            _messageRepository.Read();
 
             return Task.CompletedTask;
         }
