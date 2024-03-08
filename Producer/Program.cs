@@ -1,6 +1,5 @@
+using Common.Dto;
 using Common.Entities;
-using RabbitMQ.Client;
-using System.Text;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,12 +16,15 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-app.MapPost("/product", (ProductRequest payload) =>
+app.MapPost("/product", (ProductRequestDto payload) =>
 {
+    //Some manipulation to the data ?!
+    ProductRequest product = DataManipulation(payload);
+
     // TODO: save to database
 
     var messageRepository = app.Services.GetRequiredService<IMessageRepository>();
-    messageRepository.Publish(JsonSerializer.Serialize(payload));
+    messageRepository.Publish(JsonSerializer.Serialize(product));
 
     return TypedResults.Created();
 })
@@ -31,3 +33,23 @@ app.MapPost("/product", (ProductRequest payload) =>
 
 app.Run();
 
+static ProductRequest DataManipulation(ProductRequestDto payload)
+{
+    ProductRequest product = new()
+    {
+        Id = payload.Id,
+        Name = payload.Name
+    };
+ 
+    Random random = new();
+
+    product.CreateDate = random.Next(1, 100) switch
+    {
+        < 25 => DateTime.UtcNow.AddMinutes(random.Next(1, 10)),
+        < 50 => DateTime.UtcNow.AddHours(random.Next(1, 10)),
+        < 75 => DateTime.UtcNow.AddDays(random.Next(1, 10)),
+        _ => DateTime.UtcNow.AddMonths(random.Next(1, 10)),
+    };
+
+    return product;
+}

@@ -38,7 +38,7 @@ public class RabbitReader : IMessageRepository
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
             ProductRequest product = JsonSerializer.Deserialize<ProductRequest>(message);
-            Console.WriteLine(" [x] Received: {0}, {1}", product?.Id, product?.Name);
+            Console.WriteLine("[x] Received: {0}, {1} - {2}", product?.Id, product?.Name, product?.CreateDate);
         };
 
         _channel.BasicConsume(queue: "productQueue", autoAck: true, consumer: consumer);
