@@ -43,4 +43,20 @@ public class RabbitReader : IMessageRepository
 
         _channel.BasicConsume(queue: "productQueue", autoAck: true, consumer: consumer);
     }
+
+    public void Publish(string message)
+    {
+        _channel.QueueDeclare(queue: "productQueue",
+                             durable: false,
+                             exclusive: false,
+                             autoDelete: false,
+                             arguments: null);
+
+        var body = Encoding.UTF8.GetBytes(message);
+
+        _channel.BasicPublish(exchange: "",
+                             routingKey: "productQueue",
+                             basicProperties: null,
+                             body: body);
+    }
 }
