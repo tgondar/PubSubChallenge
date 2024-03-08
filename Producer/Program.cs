@@ -16,7 +16,7 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-app.MapPost("/product", (ProductRequestDto payload) =>
+app.MapPost("/queue/product", (ProductRequestDto payload) =>
 {
     //Some manipulation to the data ?!
     ProductRequest product = DataManipulation(payload);
@@ -30,6 +30,26 @@ app.MapPost("/product", (ProductRequestDto payload) =>
 })
 .WithName("NewProduct")
 .WithOpenApi();
+
+app.MapPost("/topic/product", (ProductRequestDto payload) =>
+{
+    //Some manipulation to the data ?!
+    ProductRequest product = DataManipulation(payload);
+
+    // TODO: save to database
+
+    var messageRepository = app.Services.GetRequiredService<IMessageRepository>();
+    // Assuming RabbitReader has been updated with the PublishToTopic method
+    // Also assuming you have a predefined exchange and routing key
+    string exchange = "logs";
+    string routingKey = "info";
+    messageRepository.PublishToTopic(exchange, routingKey, JsonSerializer.Serialize(product));
+
+    return TypedResults.Created();
+})
+.WithName("NewProductToTopic")
+.WithOpenApi();
+
 
 app.Run();
 

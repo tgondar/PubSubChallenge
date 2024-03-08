@@ -17,6 +17,11 @@ namespace Subscriber
 
             _messageRepository.Read();
 
+            string exchange = "logs";
+            string routingKey = "info";
+
+            _messageRepository.ReadFromTopic(exchange, routingKey);
+
             return Task.CompletedTask;
         }
     }
