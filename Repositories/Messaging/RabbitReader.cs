@@ -5,7 +5,7 @@ using RabbitMQ.Client.Events;
 using System.Text;
 using System.Text.Json;
 
-public class RabbitReader : IMessageRepository
+public class RabbitReader : IMessageRepository, IRabbitMQService
 {
     private readonly ILogger<RabbitReader> _logger;
     private IConnection _connection;
