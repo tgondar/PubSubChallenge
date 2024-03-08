@@ -4,7 +4,7 @@ using Subscriber;
 
 Console.WriteLine("Rabbit reader: ");
 
-var builder = Host.CreateApplicationBuilder();
+var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddSingleton<IMessageRepository, RabbitReader>();
 builder.Services.AddHostedService<Worker>();

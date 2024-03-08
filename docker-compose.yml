@@ -1,6 +1,7 @@
 version: '3.4'
 
 services:
+
   producer:
     image: ${DOCKER_REGISTRY-}producer
     build:
@@ -16,8 +17,18 @@ services:
       - RABBITMQ_DEFAULT_USER=user
       - RABBITMQ_DEFAULT_PASS=password
 
-  subscriber:
+  subscriber001:
     image: ${DOCKER_REGISTRY-}subscriber
     build:
       context: .
       dockerfile: Subscriber/Dockerfile
+    environment:
+      - workerid=001
+
+  subscriber002:
+    image: ${DOCKER_REGISTRY-}subscriber
+    build:
+      context: .
+      dockerfile: Subscriber/Dockerfile
+    environment:
+      - workerid=002

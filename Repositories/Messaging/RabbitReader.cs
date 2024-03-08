@@ -1,4 +1,5 @@
 using Common.Entities;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
@@ -6,12 +7,14 @@ using System.Text.Json;
 
 public class RabbitReader : IMessageRepository
 {
+    private readonly ILogger<RabbitReader> _logger;
     private IConnection _connection;
     private IModel _channel;
 
-    public RabbitReader()
+    public RabbitReader(ILogger<RabbitReader> logger)
     {
         CreateConnection();
+        _logger = logger;
     }
 
     public void CreateConnection()
@@ -38,7 +41,11 @@ public class RabbitReader : IMessageRepository
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
             ProductRequest product = JsonSerializer.Deserialize<ProductRequest>(message);
-            Console.WriteLine("[x] Received: {0}, {1} - {2}", product?.Id, product?.Name, product?.CreateDate);
+
+            string workerid = Environment.GetEnvironmentVariable("workerid");
+
+            _logger.LogInformation($"WORKER {workerid} Received: {product?.Id}, {product?.Name} - {product?.CreateDate}");
+
         };
 
         _channel.BasicConsume(queue: "productQueue", autoAck: true, consumer: consumer);
@@ -58,5 +65,7 @@ public class RabbitReader : IMessageRepository
                              routingKey: "productQueue",
                              basicProperties: null,
                              body: body);
+
+        _logger.LogInformation($"Published: {message}");
     }
 }
