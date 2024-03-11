@@ -22,6 +22,7 @@ public class RabbitReader : IMessageRepository, IRabbitMQService
         var factory = new ConnectionFactory()
         {
             HostName = "host.docker.internal",
+            //HostName = "localhost",
             Port = 5672,
             UserName = "user",
             Password = "password",
@@ -31,7 +32,7 @@ public class RabbitReader : IMessageRepository, IRabbitMQService
         _channel = _connection.CreateModel();
     }
 
-    public void Read()
+    public void ReadFromQueue()
     {
         _channel.QueueDeclare(queue: "productQueue", durable: false, exclusive: false, autoDelete: false, arguments: null);
 
@@ -77,35 +78,5 @@ public class RabbitReader : IMessageRepository, IRabbitMQService
         };
 
         _channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
-    }
-
-
-    public void Publish(string message)
-    {
-        _channel.QueueDeclare(queue: "productQueue",
-                             durable: false,
-                             exclusive: false,
-                             autoDelete: false,
-                             arguments: null);
-
-        var body = Encoding.UTF8.GetBytes(message);
-
-        _channel.BasicPublish(exchange: "",
-                             routingKey: "productQueue",
-                             basicProperties: null,
-                             body: body);
-    }
-
-    public void PublishToTopic(string exchange, string routingKey, string message)
-    {
-        // Declare the exchange
-        _channel.ExchangeDeclare(exchange: exchange, type: ExchangeType.Topic);
-
-        var body = Encoding.UTF8.GetBytes(message);
-
-        _channel.BasicPublish(exchange: exchange,
-                             routingKey: routingKey,
-                             basicProperties: null,
-                             body: body);
     }
 }

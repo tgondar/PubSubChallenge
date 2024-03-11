@@ -15,7 +15,7 @@ namespace Subscriber
         {
             stoppingToken.ThrowIfCancellationRequested();
 
-            _messageRepository.Read();
+            _messageRepository.ReadFromQueue();
 
             string exchange = "logs";
             string routingKey = "info";
