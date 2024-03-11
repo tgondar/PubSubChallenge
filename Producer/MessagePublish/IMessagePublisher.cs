@@ -1,4 +1,4 @@
-﻿namespace PubRepositories.Publisher
+﻿namespace Producer.MessagePublish
 {
     public interface IMessagePublisher
     {

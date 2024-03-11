@@ -18,7 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Repositories\Repositories.csproj" />
+    <ProjectReference Include="..\Producer\Producer.csproj" />
+    <ProjectReference Include="..\Subscriber\Subscriber.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -17,10 +17,7 @@ namespace Subscriber
 
             _messageRepository.ReadFromQueue();
 
-            string exchange = "logs";
-            string routingKey = "info";
-
-            _messageRepository.ReadFromTopic(exchange, routingKey);
+            _messageRepository.ReadFromTopic();
 
             return Task.CompletedTask;
         }

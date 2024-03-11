@@ -1,5 +1,5 @@
-using Common.Entities;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
@@ -10,9 +10,11 @@ public class RabbitReader : IMessageRepository, IRabbitMQService
     private readonly ILogger<RabbitReader> _logger;
     private IConnection _connection;
     private IModel _channel;
+    private readonly RabbitMQSettings _rabbitSettings;
 
-    public RabbitReader(ILogger<RabbitReader> logger)
+    public RabbitReader(ILogger<RabbitReader> logger, IOptions<RabbitMQSettings> rabbitSettings)
     {
+        _rabbitSettings = rabbitSettings.Value;
         CreateConnection();
         _logger = logger;
     }
@@ -21,13 +23,12 @@ public class RabbitReader : IMessageRepository, IRabbitMQService
     {
         var factory = new ConnectionFactory()
         {
-            HostName = "host.docker.internal",
-            //HostName = "localhost",
-            Port = 5672,
-            UserName = "user",
-            Password = "password",
-
+            HostName = _rabbitSettings.HostName,
+            Port = _rabbitSettings.Port,
+            UserName = _rabbitSettings.UserName,
+            Password = _rabbitSettings.Password
         };
+
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
     }
@@ -46,14 +47,16 @@ public class RabbitReader : IMessageRepository, IRabbitMQService
             string workerid = Environment.GetEnvironmentVariable("workerid");
 
             _logger.LogInformation($"WORKER {workerid} Received: {product?.Id}, {product?.Name} - {product?.CreateDate}");
-
         };
 
         _channel.BasicConsume(queue: "productQueue", autoAck: true, consumer: consumer);
     }
 
-    public void ReadFromTopic(string exchange, string routingKey)
+    public void ReadFromTopic()
     {
+        string exchange = _rabbitSettings.Exchange;
+        string routingKey = _rabbitSettings.RoutingKey;
+
         // Declare the exchange
         _channel.ExchangeDeclare(exchange: exchange, type: ExchangeType.Topic);
 

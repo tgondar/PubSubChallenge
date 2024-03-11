@@ -1,4 +1,4 @@
-﻿namespace Common.Entities
+﻿namespace Producer.Entities
 {
     public class ProductRequest
     {

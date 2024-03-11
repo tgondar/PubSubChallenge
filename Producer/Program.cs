@@ -1,4 +1,5 @@
-using PubRepositories.Publisher;
+using Producer.Entities;
+using Producer.MessagePublish;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);

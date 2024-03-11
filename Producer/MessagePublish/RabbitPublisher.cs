@@ -2,9 +2,9 @@
 using RabbitMQ.Client;
 using System.Text;
 
-namespace PubRepositories.Publisher
+namespace Producer.MessagePublish
 {
-    public class RabbitPublisher : IMessagePublisher
+    public class RabbitPublisher : IMessagePublisher, IRabbitMQService
     {
         private IConnection _connection;
         private IModel _channel;
@@ -26,6 +26,7 @@ namespace PubRepositories.Publisher
                 UserName = _rabbitSettings.UserName,
                 Password = _rabbitSettings.Password,
             };
+
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
         }
